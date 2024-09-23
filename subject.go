@@ -31,23 +31,22 @@ func ValidateSubject(subject Subject) error {
 		return errors.New("nil subject")
 	}
 
-	if subject.GetDomain() == nil && subject.GetHostname() == "" && subject.GetIPv4() == nil && subject.GetIPv6() == nil {
-		return errors.New("subject must contain at least one of the following: hostname, IPv4 address, IPv6 address, or domain name")
-	}
-
-	var errs []error
-
 	domains := subject.GetDomain()
 	hostname := subject.GetHostname()
 	ipv4s := subject.GetIPv4()
 	ipv6s := subject.GetIPv6()
 	countries := subject.GetCountry()
 
-	if subject.GetDomain() != nil {
-		for _, domain := range domains {
-			if err := validate.Domain(domain, 0, 0); err != nil {
-				errs = append(errs, fmt.Errorf("invalid domain name: %w", err))
-			}
+	if subject.GetDomain() == nil && subject.GetHostname() == "" && subject.GetIPv4() == nil && subject.GetIPv6() == nil {
+		return errors.New("subject must contain at least one of the following: hostname, IPv4 address, IPv6 address, or domain name")
+	}
+
+	var errs []error
+
+
+	for _, domain := range domains {
+		if err := validate.Domain(domain, 0, 0); err != nil {
+			errs = append(errs, fmt.Errorf("invalid domain name: %w", err))
 		}
 	}
 
