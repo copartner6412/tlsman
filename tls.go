@@ -18,8 +18,10 @@ type TLS struct {
 
 	PrivateKeyPassword string
 
+	NotBefore time.Time
+
 	// NotAfter field in the parsed TLS certificate
-	CertificateExpiresAt time.Time
+	NotAfter time.Time
 }
 
 // Destroy clears sensitive data within the TLS struct.
@@ -35,5 +37,6 @@ func (t *TLS) IsZero() bool {
 		len(t.Certificate) == 0 &&
 		len(t.Fullchain) == 0 &&
 		t.PrivateKeyPassword == "" &&
-		t.CertificateExpiresAt.IsZero()
+		t.NotBefore.IsZero() &&
+		t.NotAfter.IsZero()
 }

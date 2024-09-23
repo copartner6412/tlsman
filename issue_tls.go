@@ -67,12 +67,13 @@ func IssueTLS(ca TLS, template *x509.Certificate, publicKey crypto.PublicKey, pr
 	}
 
 	result := TLS{
-		PublicKey:            publicKeyPEMBytes,
-		PrivateKey:           privateKeyPEMBytes,
-		Certificate:          certificatePEMBytes,
-		Fullchain:            fullchainPEMBytes,
-		PrivateKeyPassword:   password,
-		CertificateExpiresAt: time.Now().Add(time.Until(template.NotAfter)),
+		PublicKey:          publicKeyPEMBytes,
+		PrivateKey:         privateKeyPEMBytes,
+		Certificate:        certificatePEMBytes,
+		Fullchain:          fullchainPEMBytes,
+		PrivateKeyPassword: password,
+		NotBefore:          time.Now().Add(time.Until(template.NotBefore)),
+		NotAfter:           time.Now().Add(time.Until(template.NotAfter)),
 	}
 
 	if _, _, _, _, err := ParseTLS(result); err != nil {

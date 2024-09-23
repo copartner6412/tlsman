@@ -164,7 +164,7 @@ func parsePrivateKey(privateKeyPEMBytes []byte, password string) (privateKey cry
 // parseCertificate is a helper function for Parse that parses a PEM-encoded certificate byte slice to a x509.certificate pointer.
 func parseCertificate(certificatePEMBytes []byte) (certificate *x509.Certificate, err error) {
 	certificatePEMBytes = bytes.TrimSpace(certificatePEMBytes)
-	
+
 	certificatePEMBlock, _ := pem.Decode(certificatePEMBytes)
 	if certificatePEMBlock == nil {
 		return nil, fmt.Errorf("failed to decode PEM-encoded X509 certificate byte slice to a PEM block: resulted pointer to decoded certificate PEM block is nil")

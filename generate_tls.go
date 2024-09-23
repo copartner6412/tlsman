@@ -22,12 +22,12 @@ import (
 )
 
 const (
-	minDurationAllowed time.Duration = 1 * time.Second
-	maxDurationAllowed time.Duration = 50 * 365 * 24 * time.Hour // 30 years
-	minOrganizationLength uint = 1
-	maxOrganizationLength uint = 64
-	minSerialNumberBitSize uint = 128
-	maxSerialNumberBitSize uint = 160
+	minDurationAllowed     time.Duration = 1 * time.Second
+	maxDurationAllowed     time.Duration = 50 * 365 * 24 * time.Hour // 30 years
+	minOrganizationLength  uint          = 1
+	maxOrganizationLength  uint          = 64
+	minSerialNumberBitSize uint          = 128
+	maxSerialNumberBitSize uint          = 160
 )
 
 // This function performs the following steps:
@@ -95,12 +95,13 @@ func GenerateTLS(subject Subject, ca TLS, organization, email string, validFor t
 	}
 
 	result := TLS{
-		PublicKey:            publicKeyPEMBytes,
-		PrivateKey:           privateKeyPEMBytes,
-		Certificate:          certificatePEMBytes,
-		Fullchain:            fullchainPEMBytes,
-		PrivateKeyPassword:   password,
-		CertificateExpiresAt: time.Now().Add(validFor),
+		PublicKey:          publicKeyPEMBytes,
+		PrivateKey:         privateKeyPEMBytes,
+		Certificate:        certificatePEMBytes,
+		Fullchain:          fullchainPEMBytes,
+		PrivateKeyPassword: password,
+		NotBefore:          time.Now(),
+		NotAfter:           time.Now().Add(validFor),
 	}
 
 	if _, _, _, _, err := ParseTLS(result); err != nil {

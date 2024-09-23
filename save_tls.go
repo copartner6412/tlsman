@@ -24,7 +24,7 @@ func SaveTLS(tls TLS, directory string) error {
 	// Define files with their attributes.
 	files := map[string]struct {
 		filename   string
-		data      []byte
+		data       []byte
 		permission os.FileMode
 	}{
 		"public key":  {filename: filenamePublicKey, data: tls.PublicKey, permission: os.FileMode(0644)},

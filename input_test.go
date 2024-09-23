@@ -45,7 +45,7 @@ func (s subject) GetCountry() []string {
 	return []string{s.country}
 }
 
-const (	
+const (
 	minSerialNumberBitSize uint = 128
 	maxSerialNumberBitSize uint = 160
 )

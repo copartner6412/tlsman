@@ -60,12 +60,13 @@ func LoadTLS(directory, privateKeyPassword string) (TLS, error) {
 	}
 
 	result := TLS{
-		PublicKey:            fileContents["public key"],
-		PrivateKey:           fileContents["private key"],
-		Certificate:          fileContents["certificate"],
-		Fullchain:            fileContents["fullchain"],
-		PrivateKeyPassword:   privateKeyPassword,
-		CertificateExpiresAt: certificate.NotAfter,
+		PublicKey:          fileContents["public key"],
+		PrivateKey:         fileContents["private key"],
+		Certificate:        fileContents["certificate"],
+		Fullchain:          fileContents["fullchain"],
+		PrivateKeyPassword: privateKeyPassword,
+		NotBefore:          certificate.NotBefore,
+		NotAfter:           certificate.NotAfter,
 	}
 
 	if _, _, _, _, err := ParseTLS(result); err != nil {
