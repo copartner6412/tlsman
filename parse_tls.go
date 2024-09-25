@@ -10,6 +10,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+
 	googlex509 "github.com/google/certificate-transparency-go/x509"
 )
 
@@ -43,7 +44,11 @@ func ParseTLS(tls TLS) (publicKey crypto.PublicKey, privateKey crypto.PrivateKey
 	}
 
 	if len(errs) > 0 {
-		return nil, nil, nil, nil, err
+		return nil, nil, nil, nil, errors.Join(errs...)
+	}
+
+	if !arePublicKeysEqual(tls.PublicKey, tls.PrivateKey) {
+		return nil, nil, nil, nil, fmt.Errorf("key pair mismatch")
 	}
 
 	return publicKey, privateKey, certificate, fullchain, nil
@@ -141,11 +146,7 @@ func parsePrivateKey(privateKeyPEMBytes []byte, password string) (privateKey cry
 		}
 
 		switch key := parsedPrivateKey.(type) {
-		case *rsa.PrivateKey:
-			privateKey = key
-		case *ecdsa.PrivateKey:
-			privateKey = key
-		case ed25519.PrivateKey:
+		case *rsa.PrivateKey, *ecdsa.PrivateKey, ed25519.PrivateKey:
 			privateKey = key
 		default:
 			return nil, fmt.Errorf("unsupported private key type: %T", parsedPrivateKey)
@@ -226,4 +227,17 @@ func parseFullchain(fullchainPEMBytes []byte) (fullchain []*x509.Certificate, er
 	}
 
 	return fullchain, nil
+}
+
+func arePublicKeysEqual(publickKey crypto.PublicKey, privateKey crypto.PrivateKey) bool {
+	switch privateKeyTypeAsserted := privateKey.(type) {
+	case *rsa.PrivateKey:
+		return privateKeyTypeAsserted.PublicKey.Equal(publickKey.(*rsa.PublicKey))
+	case *ecdsa.PrivateKey:
+		return privateKeyTypeAsserted.PublicKey.Equal(publickKey.(*ecdsa.PublicKey))
+	case ed25519.PrivateKey:
+		return privateKeyTypeAsserted.Public().(*ed25519.PublicKey).Equal(publickKey.(*ed25519.PublicKey))
+	default:
+		return false
+	}
 }

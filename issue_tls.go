@@ -26,7 +26,7 @@ import (
 // Returns:
 //   - A TLS struct containing the PEM-encoded public key, private key, certificate, and fullchain.
 //   - An error if any issues occur during the certificate generation or encoding process.
-func IssueTLS(ca TLS, template *x509.Certificate, publicKey crypto.PublicKey, privateKey crypto.PrivateKey, password string) (TLS, error) {
+func IssueTLS(ca TLS, publicKey crypto.PublicKey, privateKey crypto.PrivateKey, template *x509.Certificate, password string) (TLS, error) {
 	var err error
 
 	if err := validateIssueInput(ca, publicKey, privateKey); err != nil {

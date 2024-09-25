@@ -51,7 +51,7 @@ func SaveTLS(tls TLS, directory string) error {
 func validateSaveInput(tls TLS, directory string) error {
 	var errs []error
 	if directory == "" {
-		errs = append(errs, fmt.Errorf("directory path is empty"))
+		errs = append(errs, fmt.Errorf("empty directory path"))
 	}
 
 	if _, _, _, _, err := ParseTLS(tls); err != nil {

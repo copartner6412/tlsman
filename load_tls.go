@@ -11,7 +11,7 @@ import (
 
 func LoadTLS(directory, privateKeyPassword string) (TLS, error) {
 	if directory == "" {
-		return TLS{}, fmt.Errorf("directory path is empty")
+		return TLS{}, fmt.Errorf("empty directory path")
 	}
 
 	var errs []error

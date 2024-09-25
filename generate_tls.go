@@ -23,7 +23,7 @@ import (
 
 const (
 	minDurationAllowed     time.Duration = 1 * time.Second
-	maxDurationAllowed     time.Duration = 50 * 365 * 24 * time.Hour // 30 years
+	maxDurationAllowed     time.Duration = 30 * 365 * 24 * time.Hour // 30 years
 	minOrganizationLength  uint          = 1
 	maxOrganizationLength  uint          = 64
 	minSerialNumberBitSize uint          = 128
@@ -177,7 +177,7 @@ func validateOrganization(organization string) error {
 func validateAlgorithm(algorithm Algorithm, weaks []Algorithm) error {
 	for _, weak := range weaks {
 		if algorithm == weak {
-			return errors.New("weak algorithm")
+			return fmt.Errorf("weak algorithm: %s", algorithm.String())
 		}
 	}
 

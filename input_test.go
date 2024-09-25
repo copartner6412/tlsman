@@ -17,7 +17,7 @@ const (
 	maxDuration time.Duration = 50 * 365 * 24 * time.Hour // 30 years
 )
 
-type subject struct {
+type mockSubject struct {
 	domain   string
 	hostname string
 	ipv4     string
@@ -25,23 +25,23 @@ type subject struct {
 	country  string
 }
 
-func (s subject) GetDomain() []string {
+func (s mockSubject) GetDomain() []string {
 	return []string{s.domain}
 }
 
-func (s subject) GetHostname() string {
+func (s mockSubject) GetHostname() string {
 	return s.hostname
 }
 
-func (s subject) GetIPv4() []string {
+func (s mockSubject) GetIPv4() []string {
 	return []string{s.ipv4}
 }
 
-func (s subject) GetIPv6() []string {
+func (s mockSubject) GetIPv6() []string {
 	return []string{"127.0.0.1", s.ipv6}
 }
 
-func (s subject) GetCountry() []string {
+func (s mockSubject) GetCountry() []string {
 	return []string{s.country}
 }
 
@@ -50,8 +50,8 @@ const (
 	maxSerialNumberBitSize uint = 160
 )
 
-type generateInput struct {
-	subject             subject
+type generateTLSInput struct {
+	subject             mockSubject
 	ca                  tlsman.TLS
 	organization, email string
 	duration            time.Duration
@@ -59,7 +59,7 @@ type generateInput struct {
 	password            string
 }
 
-func pseudorandomInputForGenerate(r *rand.Rand) (generateInput, error) {
+func pseudorandomInputForGenerate(r *rand.Rand) (generateTLSInput, error) {
 
 	var errs []error
 
@@ -100,9 +100,10 @@ func pseudorandomInputForGenerate(r *rand.Rand) (generateInput, error) {
 	}
 
 	if len(errs) > 0 {
-		return generateInput{}, errors.Join(errs...)
+		return generateTLSInput{}, errors.Join(errs...)
 	}
-	return generateInput{
+
+	return generateTLSInput{
 		subject:      subject,
 		ca:           ca,
 		organization: organization,
@@ -113,7 +114,7 @@ func pseudorandomInputForGenerate(r *rand.Rand) (generateInput, error) {
 	}, nil
 }
 
-func pseudorandomSubject(r *rand.Rand) (subject, error) {
+func pseudorandomSubject(r *rand.Rand) (mockSubject, error) {
 	var errs []error
 
 	domain, err := pseudorandom.Domain(r, 0, 0)
@@ -139,10 +140,10 @@ func pseudorandomSubject(r *rand.Rand) (subject, error) {
 	country := pseudorandom.CountryCode2(r)
 
 	if len(errs) > 0 {
-		return subject{}, errors.Join(errs...)
+		return mockSubject{}, errors.Join(errs...)
 	}
 
-	return subject{
+	return mockSubject{
 		domain:   domain,
 		hostname: hostname,
 		ipv4:     ipv4.String(),
@@ -181,7 +182,7 @@ func pseudorandomCA(r *rand.Rand) (tlsman.TLS, error) {
 		return tlsman.TLS{}, fmt.Errorf("error generating valid input for creating a CA: %v", errors.Join(errs...))
 	}
 
-	ca, err := tlsman.IssueTLS(tlsman.TLS{}, &caTemplate, caPublicKey, caPrivateKey, caPassword)
+	ca, err := tlsman.IssueTLS(tlsman.TLS{}, caPublicKey, caPrivateKey, &caTemplate, caPassword)
 	if err != nil {
 		return tlsman.TLS{}, fmt.Errorf("error creating a CA: %v", err)
 	}

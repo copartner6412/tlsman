@@ -43,7 +43,6 @@ func ValidateSubject(subject Subject) error {
 
 	var errs []error
 
-
 	for _, domain := range domains {
 		if err := validate.Domain(domain, 0, 0); err != nil {
 			errs = append(errs, fmt.Errorf("invalid domain name: %w", err))
