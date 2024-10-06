@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 )
 
-func LoadTLS(directory, privateKeyPassword string) (TLS, error) {
+func LoadKeyPair(directory, privateKeyPassword string) (KeyPair, error) {
 	if directory == "" {
-		return TLS{}, fmt.Errorf("empty directory path")
+		return KeyPair{}, fmt.Errorf("empty directory path")
 	}
 
 	var errs []error
@@ -19,8 +19,6 @@ func LoadTLS(directory, privateKeyPassword string) (TLS, error) {
 	files := map[string]string{
 		"public key":  filenamePublicKey,
 		"private key": filenamePrivateKey,
-		"certificate": filenameCertificate,
-		"fullchain":   filenameFullchain,
 	}
 
 	fileContents := make(map[string][]byte)
@@ -49,28 +47,17 @@ func LoadTLS(directory, privateKeyPassword string) (TLS, error) {
 	}
 
 	if len(errs) > 0 {
-		return TLS{}, errors.Join(errs...)
+		return KeyPair{}, errors.Join(errs...)
 	}
 
-	certificatePEMBytes := fileContents["certificate"]
-
-	certificate, err := parseCertificate(certificatePEMBytes)
-	if err != nil {
-		return TLS{}, fmt.Errorf("error parsing certificate: %w", err)
-	}
-
-	result := TLS{
+	result := KeyPair{
 		PublicKey:          fileContents["public key"],
 		PrivateKey:         fileContents["private key"],
-		Certificate:        fileContents["certificate"],
-		Fullchain:          fileContents["fullchain"],
 		PrivateKeyPassword: []byte(privateKeyPassword),
-		NotBefore:          certificate.NotBefore,
-		NotAfter:           certificate.NotAfter,
 	}
 
-	if _, _, _, _, err := result.Parse(); err != nil {
-		return TLS{}, fmt.Errorf("invalid TLS: %w", err)
+	if _, _, err := result.Parse(); err != nil {
+		return KeyPair{}, fmt.Errorf("invalid key pair: %w", err)
 	}
 
 	return result, nil

@@ -1,15 +1,12 @@
 package tlsman_test
 
 import (
-	"crypto/x509"
 	"errors"
-	"fmt"
 	"math/rand/v2"
 	"time"
 
 	"github.com/coparter6412/tlsman"
 	"github.com/copartner6412/input/pseudorandom"
-	"github.com/copartner6412/input/random"
 )
 
 const (
@@ -18,6 +15,7 @@ const (
 )
 
 type mockSubject struct {
+	port     uint16
 	domain   string
 	hostname string
 	ipv4     string
@@ -25,19 +23,11 @@ type mockSubject struct {
 	country  string
 }
 
-func (s mockSubject) GetDomain() []string {
-	return []string{s.domain}
+func (s mockSubject) GetHTTPSPort() uint16 {
+	return s.port
 }
 
-func (s mockSubject) GetHostname() string {
-	return s.hostname
-}
-
-func (s mockSubject) GetIPv4() []string {
-	return []string{s.ipv4}
-}
-
-func (s mockSubject) GetIPv6() []string {
+func (s mockSubject) GetHTTPSAddresses() []string {
 	return []string{"127.0.0.1", s.ipv6}
 }
 
@@ -50,25 +40,19 @@ const (
 	maxSerialNumberBitSize uint = 160
 )
 
-type generateTLSInput struct {
+type testInput struct {
 	subject             mockSubject
-	ca                  tlsman.TLS
 	organization, email string
 	duration            time.Duration
 	algorithm           tlsman.Algorithm
 	password            string
 }
 
-func pseudorandomInputForGenerate(r *rand.Rand) (generateTLSInput, error) {
+func pseudorandomTestInput(r *rand.Rand) (testInput, error) {
 
 	var errs []error
 
 	subject, err := pseudorandomSubject(r)
-	if err != nil {
-		errs = append(errs, err)
-	}
-
-	ca, err := pseudorandomCA(r)
 	if err != nil {
 		errs = append(errs, err)
 	}
@@ -100,12 +84,11 @@ func pseudorandomInputForGenerate(r *rand.Rand) (generateTLSInput, error) {
 	}
 
 	if len(errs) > 0 {
-		return generateTLSInput{}, errors.Join(errs...)
+		return testInput{}, errors.Join(errs...)
 	}
 
-	return generateTLSInput{
+	return testInput{
 		subject:      subject,
-		ca:           ca,
 		organization: organization,
 		email:        email,
 		duration:     validDuration,
@@ -115,6 +98,8 @@ func pseudorandomInputForGenerate(r *rand.Rand) (generateTLSInput, error) {
 }
 
 func pseudorandomSubject(r *rand.Rand) (mockSubject, error) {
+	port := pseudorandom.PortPrivate(r)
+
 	var errs []error
 
 	domain, err := pseudorandom.Domain(r, 0, 0)
@@ -144,50 +129,13 @@ func pseudorandomSubject(r *rand.Rand) (mockSubject, error) {
 	}
 
 	return mockSubject{
+		port:     port,
 		domain:   domain,
 		hostname: hostname,
 		ipv4:     ipv4.String(),
 		ipv6:     ipv6.String(),
 		country:  country,
 	}, nil
-}
-
-func pseudorandomCA(r *rand.Rand) (tlsman.TLS, error) {
-	var errs []error
-
-	serialNumber, err := pseudorandom.BigInteger(r, minSerialNumberBitSize, maxSerialNumberBitSize)
-	if err != nil {
-		errs = append(errs, err)
-	}
-
-	caTemplate := x509.Certificate{
-		SerialNumber: serialNumber,
-		KeyUsage:     x509.KeyUsageCertSign | x509.KeyUsageCRLSign,
-		IsCA:         true,
-	}
-
-	caAlgorithm := pseudorandomAlgorithm(r)
-
-	caPublicKey, caPrivateKey, err := random.KeyPair(random.Algorithm(caAlgorithm))
-	if err != nil {
-		errs = append(errs, err)
-	}
-
-	caPassword, err := pseudorandom.PasswordFor(r, pseudorandom.PasswordProfileTLSCAKey)
-	if err != nil {
-		errs = append(errs, err)
-	}
-
-	if len(errs) > 0 {
-		return tlsman.TLS{}, fmt.Errorf("error generating valid input for creating a CA: %v", errors.Join(errs...))
-	}
-
-	ca, err := tlsman.IssueTLS(tlsman.TLS{}, caPublicKey, caPrivateKey, &caTemplate, caPassword)
-	if err != nil {
-		return tlsman.TLS{}, fmt.Errorf("error creating a CA: %v", err)
-	}
-
-	return ca, nil
 }
 
 func pseudorandomAlgorithm(r *rand.Rand) tlsman.Algorithm {

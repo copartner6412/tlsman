@@ -1,10 +1,10 @@
 github.com/copartner6412/input/pseudorandom v0.0.0-20240921103329-5bad59728edf h1:kFTSSSCvDmoxnySGiPYmxwaL0wVwoFFxOqFQsn/b05Q=
 github.com/copartner6412/input/pseudorandom v0.0.0-20240921103329-5bad59728edf/go.mod h1:TyNLL8bHCxeRcBkadgmeYTpN5OiZZMR/TC+jM4AqQnY=
-github.com/copartner6412/input/random v0.0.0-20240921092442-f0c2b04579df h1:ffa+ufbVCWKj6hSeT/0Zs8aA/cErlD5zRqAw1GScuOw=
-github.com/copartner6412/input/random v0.0.0-20240921092442-f0c2b04579df/go.mod h1:6o1bsqx50HUjl2tP+3EkMi9Fsc51YAUXPM8KaQNQz6U=
-github.com/copartner6412/input/validate v0.0.0-20240921092442-f0c2b04579df h1:DC/xaC88h4OSvCOAlZLVZD431+UCHKF6ZoDL3/ne2IQ=
-github.com/copartner6412/input/validate v0.0.0-20240921092442-f0c2b04579df/go.mod h1:8AL4saqTa6TbGchlMe7lf48K/VCu+4j/WyHiUwRyzks=
+github.com/copartner6412/input/random v0.0.0-20240928194706-4778fe80061d h1:FSUBgTPExIjINMohGrQ7ozWMZzyxsX97TvOgzE8mo3Y=
+github.com/copartner6412/input/random v0.0.0-20240928194706-4778fe80061d/go.mod h1:QTMXiCD1xot9PWBUpgIfeV+BSgC1IgmbJU7EraA4FsU=
+github.com/copartner6412/input/validate v0.0.0-20240928194706-4778fe80061d h1:Lfqi1REGtClRBtfO0NJqHcoFaB0n3uBRpfSdy1yY4Tk=
+github.com/copartner6412/input/validate v0.0.0-20240928194706-4778fe80061d/go.mod h1:8AL4saqTa6TbGchlMe7lf48K/VCu+4j/WyHiUwRyzks=
 github.com/google/certificate-transparency-go v1.2.1 h1:4iW/NwzqOqYEEoCBEFP+jPbBXbLqMpq3CifMyOnDUME=
 github.com/google/certificate-transparency-go v1.2.1/go.mod h1:bvn/ytAccv+I6+DGkqpvSsEdiVGramgaSC6RD3tEmeE=
-golang.org/x/crypto v0.27.0 h1:GXm2NjJrPaiv/h1tb2UH8QfgC/hOf/+z0p6PT8o1w7A=
-golang.org/x/crypto v0.27.0/go.mod h1:1Xngt8kV6Dvbssa53Ziq6Eqn0HqbZi5Z6R0ZpwQzt70=
+golang.org/x/crypto v0.28.0 h1:GBDwsMXVQi34v5CCYUm2jkJvu4cbtru2U4TN2PSyQnw=
+golang.org/x/crypto v0.28.0/go.mod h1:rmgy+3RHxRZMyY0jjAJShp2zgEdOqj2AO7U0pYmeQ7U=

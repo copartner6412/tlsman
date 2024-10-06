@@ -14,7 +14,7 @@ func DecryptPrivateKeyPEMBytes(privateKeyPEMBytes []byte, password string) ([]by
 	privateKeyPEMBytes = bytes.ReplaceAll(privateKeyPEMBytes, []byte("\r\n"), []byte("\n"))
 	privateKeyPEMBytes = bytes.TrimSpace(privateKeyPEMBytes)
 
-	decryptedPrivateKey, err := parsePrivateKey(privateKeyPEMBytes, password)
+	decryptedPrivateKey, err := parsePrivateKey(privateKeyPEMBytes, []byte(password))
 	if err != nil {
 		return nil, fmt.Errorf("error parsing the encrypted private key: %w", err)
 	}
