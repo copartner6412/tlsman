@@ -21,7 +21,7 @@ func CreateCertificate(certificateTemplate *x509.Certificate, csr []byte, ca TLS
 		return nil, nil, fmt.Errorf("error parsing CA TLS assets: %w", err)
 	}
 
-	request, err := ParseCertificateRequeset(csr)
+	request, err := ParseCertificateRequest(csr)
 	if err != nil {
 		return nil, nil, fmt.Errorf("error parsing certificate request: %w", err)
 	}
@@ -42,6 +42,7 @@ func CreateCertificate(certificateTemplate *x509.Certificate, csr []byte, ca TLS
 	certificateTemplate.EmailAddresses = request.EmailAddresses
 	certificateTemplate.IPAddresses = request.IPAddresses
 	certificateTemplate.URIs = request.URIs
+	certificateTemplate.AuthorityKeyId = caCertificate.SubjectKeyId
 
 	certificatePEMBytes, err = createCertificatePEMBytes(certificateTemplate, request.PublicKey, caCertificate, caPrivateKey)
 	if err != nil {
@@ -60,7 +61,7 @@ func validateCreateCertificateInput(ca TLS, csr []byte, certificateTemplate *x50
 		errs = append(errs, fmt.Errorf("invalid TLS: %w", err))
 	}
 
-	if _, err := ParseCertificateRequeset(csr); err != nil {
+	if _, err := ParseCertificateRequest(csr); err != nil {
 		errs = append(errs, fmt.Errorf("invalid certificate request: %w", err))
 	}
 

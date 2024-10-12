@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func ParseCertificateRequeset(certificateRequestPEMBytes []byte) (*x509.CertificateRequest, error) {
+func ParseCertificateRequest(certificateRequestPEMBytes []byte) (*x509.CertificateRequest, error) {
 	block, _ := pem.Decode(certificateRequestPEMBytes)
 	if block == nil {
 		return nil, fmt.Errorf("error decoding PEM-encoded certificate request")
