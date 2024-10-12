@@ -54,7 +54,7 @@ func LoadTLS(directory, privateKeyPassword string) (TLS, error) {
 
 	certificatePEMBytes := fileContents["certificate"]
 
-	certificate, err := parseCertificate(certificatePEMBytes)
+	certificate, err := ParseCertificate(certificatePEMBytes)
 	if err != nil {
 		return TLS{}, fmt.Errorf("error parsing certificate: %w", err)
 	}

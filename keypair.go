@@ -88,7 +88,7 @@ func (k *KeyPair) Save(directoryPath string) error {
 }
 
 func (k *KeyPair) NewTLS(certificatePEMBytes, fullchainBytes []byte) (TLS, error) {
-	certificate, err := parseCertificate(certificatePEMBytes)
+	certificate, err := ParseCertificate(certificatePEMBytes)
 	if err != nil {
 		return TLS{}, fmt.Errorf("error parsing certificate: %w", err)
 	}

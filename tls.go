@@ -96,7 +96,7 @@ func (t *TLS) Parse() (publicKey crypto.PublicKey, privateKey crypto.PrivateKey,
 		errs = append(errs, fmt.Errorf("error parsing private key: %w", err))
 	}
 
-	certificate, err = parseCertificate(t.Certificate)
+	certificate, err = ParseCertificate(t.Certificate)
 	if err != nil {
 		errs = append(errs, fmt.Errorf("error parsing certificate: %w", err))
 	}
@@ -226,7 +226,7 @@ func parsePrivateKey(privateKeyPEMBytes, password []byte) (privateKey crypto.Pri
 }
 
 // parseCertificate is a helper function for Parse that parses a PEM-encoded certificate byte slice to a x509.certificate pointer.
-func parseCertificate(certificatePEMBytes []byte) (certificate *x509.Certificate, err error) {
+func ParseCertificate(certificatePEMBytes []byte) (certificate *x509.Certificate, err error) {
 	certificatePEMBytes = bytes.TrimSpace(certificatePEMBytes)
 
 	certificatePEMBlock, _ := pem.Decode(certificatePEMBytes)
