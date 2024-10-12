@@ -5,7 +5,7 @@ import (
 	"math/rand/v2"
 	"time"
 
-	"github.com/coparter6412/tlsman"
+	"github.com/copartner6412/tlsman"
 	"github.com/copartner6412/input/pseudorandom"
 )
 

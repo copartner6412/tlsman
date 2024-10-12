@@ -1,4 +1,4 @@
-module github.com/coparter6412/tlsman
+module github.com/copartner6412/tlsman
 
 go 1.23.0
 
