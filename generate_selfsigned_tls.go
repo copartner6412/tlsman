@@ -12,11 +12,11 @@ import (
 )
 
 const (
-	minSerialNumberBitSize uint          = 128
-	maxSerialNumberBitSize uint          = 160
+	minSerialNumberBitSize uint = 128
+	maxSerialNumberBitSize uint = 160
 )
 
-func GenerateSelfSignedTLS(certificateTemplate *x509.Certificate, algorithm Algorithm, password string)(TLS, error) {
+func GenerateSelfSignedTLS(certificateTemplate *x509.Certificate, algorithm Algorithm, password string) (TLS, error) {
 	if err := validateGenerateSelfSignedTLSInput(certificateTemplate, password); err != nil {
 		return TLS{}, fmt.Errorf("invalid input: %w", err)
 	}
@@ -67,12 +67,11 @@ func GenerateSelfSignedTLS(certificateTemplate *x509.Certificate, algorithm Algo
 	return result, nil
 }
 
-
 func validateGenerateSelfSignedTLSInput(template *x509.Certificate, password string) error {
 	var errs []error
 
 	if err := validateCertificateTemplateTime(template); err != nil {
-		errs = append(errs, fmt.Errorf("invalid template: %w", err)) 
+		errs = append(errs, fmt.Errorf("invalid template: %w", err))
 	}
 
 	if err := validate.PasswordFor(password, validate.PasswordProfileTLSCAKey); err != nil {

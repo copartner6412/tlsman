@@ -21,8 +21,8 @@ func CreateCertificateRequest(randomness io.Reader, requestTemplate *x509.Certif
 	}
 
 	pemBlock := &pem.Block{
-		Type:    "CERTIFICATE REQUEST",
-		Bytes:   certificateRequestDERBytes,
+		Type:  "CERTIFICATE REQUEST",
+		Bytes: certificateRequestDERBytes,
 	}
 
 	certificateRequestPEMBytes := pem.EncodeToMemory(pemBlock)

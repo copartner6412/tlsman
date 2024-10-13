@@ -41,7 +41,7 @@ func (k *KeyPair) Parse() (publicKey crypto.PublicKey, privateKey crypto.Private
 		errs = append(errs, fmt.Errorf("error parsing public key: %w", err))
 	}
 
-	privateKey, err = parsePrivateKey(k.PrivateKey, k.PrivateKeyPassword)
+	privateKey, err = ParsePrivateKey(k.PrivateKey, k.PrivateKeyPassword)
 	if err != nil {
 		errs = append(errs, fmt.Errorf("error parsing private key: %w", err))
 	}
@@ -109,7 +109,6 @@ func (k *KeyPair) NewTLS(certificatePEMBytes, fullchainBytes []byte) (TLS, error
 
 	return tlsAsset, nil
 }
-
 
 func writeBytesToFile(dir, name, filename string, data []byte, permission os.FileMode) error {
 	path := filepath.Join(dir, filename)

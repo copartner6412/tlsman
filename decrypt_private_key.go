@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func DecryptPrivateKeyPEMBytes(privateKeyPEMBytes []byte, password string) ([]byte, error) {
+func DecryptPrivateKeyPEM(privateKeyPEMBytes []byte, password string) ([]byte, error) {
 	if password == "" {
 		return nil, fmt.Errorf("empty password")
 	}
@@ -14,7 +14,7 @@ func DecryptPrivateKeyPEMBytes(privateKeyPEMBytes []byte, password string) ([]by
 	privateKeyPEMBytes = bytes.ReplaceAll(privateKeyPEMBytes, []byte("\r\n"), []byte("\n"))
 	privateKeyPEMBytes = bytes.TrimSpace(privateKeyPEMBytes)
 
-	decryptedPrivateKey, err := parsePrivateKey(privateKeyPEMBytes, []byte(password))
+	decryptedPrivateKey, err := ParsePrivateKey(privateKeyPEMBytes, []byte(password))
 	if err != nil {
 		return nil, fmt.Errorf("error parsing the encrypted private key: %w", err)
 	}

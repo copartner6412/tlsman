@@ -10,7 +10,7 @@ import (
 )
 
 func TestMTLS(clientTLS, serverTLS TLS) error {
-	decryptedPrivateKey, err := DecryptPrivateKeyPEMBytes(serverTLS.PrivateKey, string(serverTLS.PrivateKeyPassword))
+	decryptedPrivateKey, err := DecryptPrivateKeyPEM(serverTLS.PrivateKey, string(serverTLS.PrivateKeyPassword))
 	if err != nil {
 		return fmt.Errorf("error decrypting the private key: %w", err)
 	}
@@ -34,8 +34,8 @@ func TestMTLS(clientTLS, serverTLS TLS) error {
 
 	server.TLS = &tls.Config{
 		Certificates: []tls.Certificate{cert},
-		ClientCAs: clientCertPool,
-		ClientAuth: tls.RequireAndVerifyClientCert,
+		ClientCAs:    clientCertPool,
+		ClientAuth:   tls.RequireAndVerifyClientCert,
 	}
 
 	server.StartTLS()
@@ -66,7 +66,7 @@ func TestMTLS(clientTLS, serverTLS TLS) error {
 }
 
 func createTLSClient(clientTLS, serverTLS TLS) (*http.Client, error) {
-	decryptedPrivateKey, err := DecryptPrivateKeyPEMBytes(clientTLS.PrivateKey, string(clientTLS.PrivateKeyPassword))
+	decryptedPrivateKey, err := DecryptPrivateKeyPEM(clientTLS.PrivateKey, string(clientTLS.PrivateKeyPassword))
 	if err != nil {
 		return nil, fmt.Errorf("error decrypting the private key: %w", err)
 	}
@@ -83,7 +83,7 @@ func createTLSClient(clientTLS, serverTLS TLS) (*http.Client, error) {
 
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{cert},
-		RootCAs: certPool,
+		RootCAs:      certPool,
 	}
 
 	return &http.Client{

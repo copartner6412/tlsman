@@ -5,8 +5,8 @@ import (
 	"math/rand/v2"
 	"time"
 
-	"github.com/copartner6412/tlsman"
 	"github.com/copartner6412/input/pseudorandom"
+	"github.com/copartner6412/tlsman"
 )
 
 const (

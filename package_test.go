@@ -64,12 +64,11 @@ func FuzzPackage(f *testing.F) {
 			t.Fatalf("error loading server key pair")
 		}
 
-
 		clientRequestBytes, err := tlsman.CreateCertificateRequest(cryptorand.Reader, &x509.CertificateRequest{
-			Subject:                  pkix.Name{
-				Country:            clientInput.subject.GetCountry(),
-				Organization:       []string{clientInput.organization},
-				CommonName:         "client tls",
+			Subject: pkix.Name{
+				Country:      clientInput.subject.GetCountry(),
+				Organization: []string{clientInput.organization},
+				CommonName:   "client tls",
 			},
 		}, clientKeyPair)
 		if err != nil {
@@ -86,9 +85,9 @@ func FuzzPackage(f *testing.F) {
 				CommonName: "client ca",
 			},
 			NotBefore: time.Now(),
-			NotAfter: time.Now().Add(time.Hour),
-			IsCA: true,
-			KeyUsage: x509.KeyUsageCertSign | x509.KeyUsageCRLSign,
+			NotAfter:  time.Now().Add(time.Hour),
+			IsCA:      true,
+			KeyUsage:  x509.KeyUsageCertSign | x509.KeyUsageCRLSign,
 		}, clientInput.algorithm, clientInput.password)
 		if err != nil {
 			t.Fatalf("error generating client CA: %v", err)
@@ -99,31 +98,31 @@ func FuzzPackage(f *testing.F) {
 				CommonName: "server ca",
 			},
 			NotBefore: time.Now(),
-			NotAfter: time.Now().Add(time.Hour),
-			IsCA: true,
-			KeyUsage: x509.KeyUsageCertSign | x509.KeyUsageCRLSign,
+			NotAfter:  time.Now().Add(time.Hour),
+			IsCA:      true,
+			KeyUsage:  x509.KeyUsageCertSign | x509.KeyUsageCRLSign,
 		}, clientInput.algorithm, clientInput.password)
 		if err != nil {
 			t.Fatalf("error generating server CA: %v", err)
 		}
 
 		clientCertificatePEMBytes, clientFullchainBytes, err := tlsman.CreateCertificate(&x509.Certificate{
-			NotBefore:                   time.Now(),
-			NotAfter:                    time.Now().Add(time.Hour),
-			KeyUsage:                    x509.KeyUsageDataEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageKeyAgreement | x509.KeyUsageKeyEncipherment,
-			ExtKeyUsage:                 []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
-			BasicConstraintsValid:       true,
+			NotBefore:             time.Now(),
+			NotAfter:              time.Now().Add(time.Hour),
+			KeyUsage:              x509.KeyUsageDataEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageKeyAgreement | x509.KeyUsageKeyEncipherment,
+			ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
+			BasicConstraintsValid: true,
 		}, clientRequestBytes, clientCA)
 		if err != nil {
 			t.Fatalf("error generating client certificate: %v", err)
 		}
 
 		serverCertificatePEMBytes, serverFullchainBytes, err := tlsman.CreateCertificate(&x509.Certificate{
-			NotBefore:                   time.Now(),
-			NotAfter:                    time.Now().Add(time.Hour),
-			KeyUsage:                    x509.KeyUsageDataEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageKeyAgreement | x509.KeyUsageKeyEncipherment,
-			ExtKeyUsage:                 []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-			BasicConstraintsValid:       true,
+			NotBefore:             time.Now(),
+			NotAfter:              time.Now().Add(time.Hour),
+			KeyUsage:              x509.KeyUsageDataEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageKeyAgreement | x509.KeyUsageKeyEncipherment,
+			ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+			BasicConstraintsValid: true,
 		}, serverRequestBytes, serverCA)
 		if err != nil {
 			t.Fatalf("error generating server certificate: %v", err)
@@ -140,7 +139,7 @@ func FuzzPackage(f *testing.F) {
 		}
 
 		if err := tlsman.TestMTLS(clientTLS, serverTLS); err != nil {
-			t.Fatalf("mTLS faild: %v", err)
+			t.Fatalf("mTLS failed: %v", err)
 		}
 	})
 }

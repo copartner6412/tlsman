@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	minOrganizationLength  uint          = 1
-	maxOrganizationLength  uint          = 64
+	minOrganizationLength uint = 1
+	maxOrganizationLength uint = 64
 )
 
 func GenerateServerCertificateRequest(randomness io.Reader, subject Subject, keyPair KeyPair, organization, email string) ([]byte, error) {
@@ -44,7 +44,7 @@ func GenerateServerCertificateRequest(randomness io.Reader, subject Subject, key
 	}
 
 	request := &x509.CertificateRequest{
-		PublicKey:                keyPair.PublicKey,
+		PublicKey: keyPair.PublicKey,
 	}
 
 	if domains != nil {
@@ -84,12 +84,12 @@ func GenerateServerCertificateRequest(randomness io.Reader, subject Subject, key
 		request.EmailAddresses = []string{email}
 	}
 
-	privateKeyBytes, err := DecryptPrivateKeyPEMBytes(keyPair.PrivateKey, string(keyPair.PrivateKeyPassword))
+	privateKeyBytes, err := DecryptPrivateKeyPEM(keyPair.PrivateKey, string(keyPair.PrivateKeyPassword))
 	if err != nil {
 		return nil, fmt.Errorf("error decrypting private key: %w", err)
 	}
 
-	privateKey, err := parsePrivateKey(privateKeyBytes, keyPair.PrivateKeyPassword)
+	privateKey, err := ParsePrivateKey(privateKeyBytes, keyPair.PrivateKeyPassword)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing decrypted private key: %w", err)
 	}
@@ -100,8 +100,8 @@ func GenerateServerCertificateRequest(randomness io.Reader, subject Subject, key
 	}
 
 	pemBlock := &pem.Block{
-		Type:    "CERTIFICATE REQUEST",
-		Bytes:   certificateRequestDERBytes,
+		Type:  "CERTIFICATE REQUEST",
+		Bytes: certificateRequestDERBytes,
 	}
 
 	certificateRequestPEMBytes := pem.EncodeToMemory(pemBlock)
@@ -111,7 +111,7 @@ func GenerateServerCertificateRequest(randomness io.Reader, subject Subject, key
 
 func validateGenerateCertificateRequestInput(subject Subject, keyPair KeyPair, organization, email string) error {
 	var errs []error
-	
+
 	if err := ValidateSubject(subject); err != nil {
 		errs = append(errs, fmt.Errorf("invalid subject: %w", err))
 	}
@@ -143,7 +143,7 @@ func validateGenerateCertificateRequestInput(subject Subject, keyPair KeyPair, o
 // Each organization name should be a non-empty string.
 // While there is no explicit maximum length defined in the X.509 standard for each individual organization name, it is generally advisable to keep it concise to avoid issues with certificate size and readability.
 // The organization name should consist of printable ASCII characters. It is common to use letters (a-z, A-Z), digits (0-9), spaces, and certain punctuation marks. Special characters should be avoided unless they are explicitly allowed.
-// validateOrganization returns a non-nil error if orgranization string is empty or contains any character other printable ASCII characters.
+// validateOrganization returns a non-nil error if organization string is empty or contains any character other printable ASCII characters.
 func validateOrganization(organization string) error {
 	err := validate.String(organization, minOrganizationLength, maxOrganizationLength, true)
 	if err != nil {

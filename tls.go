@@ -58,7 +58,7 @@ func (t *TLS) Destroy() {
 	t.NotAfter = time.Time{}
 }
 
-// Structs containing []byte cannot be compared. IsZero method is defined to make it possiobe to compare variable of type TLS with TLS zero value (instead of using `== TLS{}`)
+// Structs containing []byte cannot be compared. IsZero method is defined to make it possible to compare variable of type TLS with TLS zero value (instead of using `== TLS{}`)
 func (t *TLS) IsZero() bool {
 	return len(t.PublicKey) == 0 &&
 		len(t.PrivateKey) == 0 &&
@@ -91,7 +91,7 @@ func (t *TLS) Parse() (publicKey crypto.PublicKey, privateKey crypto.PrivateKey,
 		errs = append(errs, fmt.Errorf("error parsing public key: %w", err))
 	}
 
-	privateKey, err = parsePrivateKey(t.PrivateKey, t.PrivateKeyPassword)
+	privateKey, err = ParsePrivateKey(t.PrivateKey, t.PrivateKeyPassword)
 	if err != nil {
 		errs = append(errs, fmt.Errorf("error parsing private key: %w", err))
 	}
@@ -101,7 +101,7 @@ func (t *TLS) Parse() (publicKey crypto.PublicKey, privateKey crypto.PrivateKey,
 		errs = append(errs, fmt.Errorf("error parsing certificate: %w", err))
 	}
 
-	fullchain, err = parseFullchain(t.Fullchain)
+	fullchain, err = ParseFullchain(t.Fullchain)
 	if err != nil {
 		errs = append(errs, fmt.Errorf("error parsing fullchain: %w", err))
 	}
@@ -171,7 +171,7 @@ func parsePublicKey(publicKeyPEMBytes []byte) (publicKey crypto.PublicKey, err e
 }
 
 // parsePrivateKey is a helper function for Parse that parses PEM-encoded private key byte slice and returns it as crypto.Private type.
-func parsePrivateKey(privateKeyPEMBytes, password []byte) (privateKey crypto.PrivateKey, err error) {
+func ParsePrivateKey(privateKeyPEMBytes, password []byte) (privateKey crypto.PrivateKey, err error) {
 
 	privateKeyPEMBlock, _ := pem.Decode(privateKeyPEMBytes)
 	if privateKeyPEMBlock == nil {
@@ -239,7 +239,7 @@ func ParseCertificate(certificatePEMBytes []byte) (certificate *x509.Certificate
 
 	certificate, err = x509.ParseCertificate(certificateDERBytes)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing DER-enoced X509 certificate byte slice: %w", err)
+		return nil, fmt.Errorf("error parsing DER-encoded X509 certificate byte slice: %w", err)
 	}
 
 	emptyX509Certificate := x509.Certificate{}
@@ -252,7 +252,7 @@ func ParseCertificate(certificatePEMBytes []byte) (certificate *x509.Certificate
 }
 
 // parseFullchain is a helper function for Parse that parses a PEM-encoded fullchain certificate to a slice of x509.certificate pointers.
-func parseFullchain(fullchainPEMBytes []byte) (fullchain []*x509.Certificate, err error) {
+func ParseFullchain(fullchainPEMBytes []byte) (fullchain []*x509.Certificate, err error) {
 	fullchainPEMBytes = bytes.ReplaceAll(fullchainPEMBytes, []byte("\r\n"), []byte("\n"))
 	rest := bytes.TrimSpace(fullchainPEMBytes)
 	var certificatePEMBlock *pem.Block
@@ -268,7 +268,7 @@ func parseFullchain(fullchainPEMBytes []byte) (fullchain []*x509.Certificate, er
 
 		certificate, err := x509.ParseCertificate(certificateDERBytes)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing DER-enoced X509 certificate byte slice: %w", err)
+			return nil, fmt.Errorf("error parsing DER-encoded X509 certificate byte slice: %w", err)
 		}
 
 		emptyX509Certificate := x509.Certificate{}
@@ -292,14 +292,14 @@ func parseFullchain(fullchainPEMBytes []byte) (fullchain []*x509.Certificate, er
 	return fullchain, nil
 }
 
-func arePublicAndPrivateKeysMatched(publickKey crypto.PublicKey, privateKey crypto.PrivateKey) bool {
+func arePublicAndPrivateKeysMatched(publicKey crypto.PublicKey, privateKey crypto.PrivateKey) bool {
 	switch privateKeyTypeAsserted := privateKey.(type) {
 	case *rsa.PrivateKey:
-		return privateKeyTypeAsserted.PublicKey.Equal(publickKey.(*rsa.PublicKey))
+		return privateKeyTypeAsserted.PublicKey.Equal(publicKey.(*rsa.PublicKey))
 	case *ecdsa.PrivateKey:
-		return privateKeyTypeAsserted.PublicKey.Equal(publickKey.(*ecdsa.PublicKey))
+		return privateKeyTypeAsserted.PublicKey.Equal(publicKey.(*ecdsa.PublicKey))
 	case ed25519.PrivateKey:
-		return privateKeyTypeAsserted.Public().(ed25519.PublicKey).Equal(publickKey.(ed25519.PublicKey))
+		return privateKeyTypeAsserted.Public().(ed25519.PublicKey).Equal(publicKey.(ed25519.PublicKey))
 	default:
 		return false
 	}
