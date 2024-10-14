@@ -344,7 +344,7 @@ func validateTLSSaveInput(t *TLS, directoryPath string) error {
 		errs = append(errs, fmt.Errorf("invalid TLS: %w", err))
 	}
 
-	if directoryPath != "" {
+	if directoryPath == "" {
 		errs = append(errs, errors.New("empty path for directory"))
 		return errors.Join(errs...)
 	}
