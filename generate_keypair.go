@@ -14,7 +14,6 @@ import (
 
 	"github.com/copartner6412/input/random"
 	"github.com/copartner6412/input/validate"
-	googlex509 "github.com/google/certificate-transparency-go/x509"
 )
 
 func GenerateKeyPair(randomness io.Reader, algorithm Algorithm, password string) (KeyPair, error) {
@@ -84,7 +83,7 @@ func encodePrivateKeyToPEM(privateKey crypto.PrivateKey, password string) ([]byt
 	}
 
 	if password != "" {
-		privateKeyPEMBlock, err := googlex509.EncryptPEMBlock(rand.Reader, privateKeyPEMBlock.Type, privateKeyPEMBlock.Bytes, []byte(password), googlex509.PEMCipherAES256)
+		privateKeyPEMBlock, err := x509.EncryptPEMBlock(rand.Reader, privateKeyPEMBlock.Type, privateKeyPEMBlock.Bytes, []byte(password), x509.PEMCipherAES256)
 		if err != nil {
 			return nil, fmt.Errorf("error encrypting private key PEM block: %w", err)
 		}

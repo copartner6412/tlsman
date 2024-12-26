@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/copartner6412/input/pseudorandom"
-	"github.com/copartner6412/tlsman"
+	"github.com/copartner6412/xvnet-ca/pkg/tlsman"
 )
 
 const (
@@ -34,11 +34,6 @@ func (s mockSubject) GetHTTPSAddresses() []string {
 func (s mockSubject) GetCountry() []string {
 	return []string{s.country}
 }
-
-const (
-	minSerialNumberBitSize uint = 128
-	maxSerialNumberBitSize uint = 160
-)
 
 type testInput struct {
 	subject             mockSubject

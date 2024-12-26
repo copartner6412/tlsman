@@ -13,8 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-
-	googlex509 "github.com/google/certificate-transparency-go/x509"
 )
 
 // TLS encapsulates all relevant TLS data, including keys, certificates, and metadata.
@@ -180,8 +178,8 @@ func ParsePrivateKey(privateKeyPEMBytes, password []byte) (privateKey crypto.Pri
 
 	privateKeyDERBytes := privateKeyPEMBlock.Bytes
 
-	if googlex509.IsEncryptedPEMBlock(privateKeyPEMBlock) {
-		privateKeyDERBytes, err = googlex509.DecryptPEMBlock(privateKeyPEMBlock, password)
+	if x509.IsEncryptedPEMBlock(privateKeyPEMBlock) {
+		privateKeyDERBytes, err = x509.DecryptPEMBlock(privateKeyPEMBlock, password)
 		if err != nil {
 			return nil, fmt.Errorf("error decrypting private key PEM block using the provided password: %w", err)
 		}
