@@ -4,7 +4,3 @@ github.com/copartner6412/input/random v0.0.0-20240928194706-4778fe80061d h1:FSUB
 github.com/copartner6412/input/random v0.0.0-20240928194706-4778fe80061d/go.mod h1:QTMXiCD1xot9PWBUpgIfeV+BSgC1IgmbJU7EraA4FsU=
 github.com/copartner6412/input/validate v0.0.0-20240928194706-4778fe80061d h1:Lfqi1REGtClRBtfO0NJqHcoFaB0n3uBRpfSdy1yY4Tk=
 github.com/copartner6412/input/validate v0.0.0-20240928194706-4778fe80061d/go.mod h1:8AL4saqTa6TbGchlMe7lf48K/VCu+4j/WyHiUwRyzks=
-github.com/google/certificate-transparency-go v1.2.1 h1:4iW/NwzqOqYEEoCBEFP+jPbBXbLqMpq3CifMyOnDUME=
-github.com/google/certificate-transparency-go v1.2.1/go.mod h1:bvn/ytAccv+I6+DGkqpvSsEdiVGramgaSC6RD3tEmeE=
-golang.org/x/crypto v0.28.0 h1:GBDwsMXVQi34v5CCYUm2jkJvu4cbtru2U4TN2PSyQnw=
-golang.org/x/crypto v0.28.0/go.mod h1:rmgy+3RHxRZMyY0jjAJShp2zgEdOqj2AO7U0pYmeQ7U=

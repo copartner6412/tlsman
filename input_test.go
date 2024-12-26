@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/copartner6412/input/pseudorandom"
-	"github.com/copartner6412/xvnet-ca/pkg/tlsman"
+	"github.com/copartner6412/tlsman"
 )
 
 const (

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/copartner6412/xvnet-ca/pkg/tlsman"
+	"github.com/copartner6412/tlsman"
 )
 
 // TestGenerateTLSFailsForInvalidSubject
